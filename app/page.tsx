@@ -201,8 +201,10 @@ export default function Home() {
   const q = questions[current];
   const meta = QUESTIONS_META[current];
 
+  const centeredScreens: Screen[] = ["lang", "register"];
+
   return (
-    <div className="wrap">
+    <div className={"wrap" + (centeredScreens.includes(screen) ? " wrap-centered" : "")}>
       {screen === "lang" && (
         <>
           <header>
@@ -347,17 +349,20 @@ export default function Home() {
       {screen === "win" && (
         <section className="end-screen">
           <img src="/logo.svg" alt="Perfmaker" className="logo-mark" />
+          <img src="/trophy.png" alt="" className="trophy-img" />
           <p className="trophy">{ui.winTitle}</p>
           <p className="score">
             {score} / {TOTAL_QUESTIONS} {ui.scoreLabel} · {formatDuration(finalDurationMs)}
           </p>
           <div className="diploma">{ui.winMsg}</div>
-          <button className="ghost-btn" onClick={resetGame}>
-            {ui.restartBtn}
-          </button>
-          <Link href="/leaderboard">
-            <button className="ghost-btn">{ui.leaderboardBtn}</button>
-          </Link>
+          <div className="end-actions">
+            <button className="ghost-btn" onClick={resetGame}>
+              {ui.restartBtn}
+            </button>
+            <Link href="/leaderboard">
+              <button className="ghost-btn">{ui.leaderboardBtn}</button>
+            </Link>
+          </div>
         </section>
       )}
 
@@ -369,12 +374,14 @@ export default function Home() {
           <p className="score">
             {score} / {TOTAL_QUESTIONS} {ui.scoreLabel} · {formatDuration(finalDurationMs)}
           </p>
-          <button className="ghost-btn" onClick={resetGame}>
-            {ui.restartBtn}
-          </button>
-          <Link href="/leaderboard">
-            <button className="ghost-btn">{ui.leaderboardBtn}</button>
-          </Link>
+          <div className="end-actions">
+            <button className="ghost-btn" onClick={resetGame}>
+              {ui.restartBtn}
+            </button>
+            <Link href="/leaderboard">
+              <button className="ghost-btn">{ui.leaderboardBtn}</button>
+            </Link>
+          </div>
         </section>
       )}
     </div>
