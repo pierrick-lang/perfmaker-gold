@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Player {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String   @unique
+  company   String?
+  createdAt DateTime @default(now())
+  attempts  Attempt[]
+}
+
+model Attempt {
+  id         String    @id @default(cuid())
+  playerId   String
+  player     Player    @relation(fields: [playerId], references: [id])
+  locale     String
+  startedAt  DateTime  @default(now())
+  finishedAt DateTime?
+  durationMs Int?
+  score      Int       @default(0)
+  completed  Boolean   @default(false)
+  answers    Answer[]
+
+  @@index([score, durationMs])
+}
+
+model Answer {
+  id            String   @id @default(cuid())
+  attemptId     String
+  attempt       Attempt  @relation(fields: [attemptId], references: [id])
+  questionIndex Int
+  selectedIndex Int?
+  isCorrect     Boolean
+  timedOut      Boolean  @default(false)
+  timeTakenMs   Int
+  createdAt     DateTime @default(now())
+
+  @@unique([attemptId, questionIndex])
+}

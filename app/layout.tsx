@@ -1,0 +1,25 @@
+import "./globals.css";
+
+export const metadata = {
+  title: "Qui veut gagner... un José d'OR ? — Perfmaker",
+  description: "Quiz interne Perfmaker",
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="fr">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body>
+        <div className="beam" aria-hidden="true"></div>
+        {children}
+      </body>
+    </html>
+  );
+}
