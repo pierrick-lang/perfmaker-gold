@@ -13,7 +13,7 @@ interface AnswerResult {
 
 export default function Home() {
   const [screen, setScreen] = useState<Screen>("lang");
-  const [locale, setLocale] = useState<Locale>("fr");
+  const [locale, setLocale] = useState<Locale>("en");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -207,10 +207,10 @@ export default function Home() {
         <>
           <header>
             <p className="eyebrow">Perfmaker</p>
-            <h1>{UI.fr.appTitle}</h1>
+            <h1>{ui.appTitle}</h1>
           </header>
           <section className="center-screen">
-            <p className="subtitle">{UI.fr.chooseLang}</p>
+            <p className="subtitle">{ui.chooseLang}</p>
             <div className="lang-grid">
               {LOCALES.map((l) => (
                 <button
