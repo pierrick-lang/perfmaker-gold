@@ -206,7 +206,7 @@ export default function Home() {
       {screen === "lang" && (
         <>
           <header>
-            <p className="eyebrow">Perfmaker</p>
+            <img src="/logo.svg" alt="Perfmaker" className="logo-mark" />
             <h1>{ui.appTitle}</h1>
           </header>
           <section className="center-screen">
@@ -232,7 +232,7 @@ export default function Home() {
       {screen === "register" && (
         <>
           <header>
-            <p className="eyebrow">Perfmaker</p>
+            <img src="/logo.svg" alt="Perfmaker" className="logo-mark" />
             <h1>{ui.appTitle}</h1>
             <p className="subtitle">{ui.appSubtitle}</p>
           </header>
@@ -346,7 +346,7 @@ export default function Home() {
 
       {screen === "win" && (
         <section className="end-screen">
-          <p className="eyebrow">Perfmaker</p>
+          <img src="/logo.svg" alt="Perfmaker" className="logo-mark" />
           <p className="trophy">{ui.winTitle}</p>
           <p className="score">
             {score} / {TOTAL_QUESTIONS} {ui.scoreLabel} · {formatDuration(finalDurationMs)}
@@ -363,7 +363,7 @@ export default function Home() {
 
       {screen === "gameover" && (
         <section className="end-screen">
-          <p className="eyebrow">Perfmaker</p>
+          <img src="/logo.svg" alt="Perfmaker" className="logo-mark" />
           <p className="gameover-title">{ui.almostTitle}</p>
           <p className="gameover-msg">{ui.almostMsg}</p>
           <p className="score">

@@ -55,7 +55,7 @@ export default function AdminDashboard() {
     return (
       <div className="wrap">
         <header>
-          <p className="eyebrow">Perfmaker</p>
+          <img src="/logo.svg" alt="Perfmaker" className="logo-mark" />
           <h1>Dashboard admin</h1>
         </header>
         <div className="admin-gate">
@@ -78,7 +78,7 @@ export default function AdminDashboard() {
   return (
     <div className="wrap">
       <header>
-        <p className="eyebrow">Perfmaker</p>
+        <img src="/logo.svg" alt="Perfmaker" className="logo-mark" />
         <h1>Dashboard admin</h1>
         <p className="subtitle">{attempts?.length || 0} tentative(s) enregistrée(s)</p>
       </header>

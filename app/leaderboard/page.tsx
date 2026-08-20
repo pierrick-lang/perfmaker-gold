@@ -34,7 +34,7 @@ export default function Leaderboard() {
   return (
     <div className="wrap">
       <header>
-        <p className="eyebrow">Perfmaker</p>
+        <img src="/logo.svg" alt="Perfmaker" className="logo-mark" />
         <h1>Classement général</h1>
         <p className="subtitle">Meilleur score, puis temps le plus rapide en cas d'égalité.</p>
       </header>
