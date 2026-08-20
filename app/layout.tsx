@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Qui veut gagner... un José d'OR ? — Perfmaker",
+  title: "Qui veut gagner... un Perfmaker d'or ? — Perfmaker",
   description: "Quiz interne Perfmaker",
 };
 
