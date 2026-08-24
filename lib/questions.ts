@@ -2,7 +2,7 @@
 // The actual text (question, options, feedback, gain) lives in lib/translations.ts,
 // indexed by the same position (0-9) so both stay in sync.
 
-export const TIME_LIMIT_SECONDS = 15;
+export const TIME_LIMIT_SECONDS = 25;
 
 const ILLU_FUNNEL = `<svg viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg">
   <rect x="10" y="50" width="110" height="70" rx="10" fill="#141a52" stroke="#2a3170"/>
