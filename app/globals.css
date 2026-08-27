@@ -116,7 +116,8 @@ h1{
 .timerNum{ font-family:var(--font-display); font-weight:900; font-size:1rem; color:var(--text-dim); min-width:2ch; text-align:right; }
 .timerNum.warn{ color:var(--red); }
 
-.qtext{ font-size:clamp(1.1rem,2.6vw,1.5rem); font-weight:600; line-height:1.35; margin:0 0 1.4rem; }
+.qtext{ font-size:clamp(1.1rem,2.6vw,1.5rem); font-weight:600; line-height:1.35; margin:0 0 0.6rem; }
+.multi-hint{ font-size:0.78rem; color:var(--gold); font-weight:600; margin:0 0 0.9rem; text-transform:uppercase; letter-spacing:0.04em; }
 .illu-panel{ margin-bottom:1.2rem; border:1px solid var(--line); border-radius:12px; overflow:hidden; background:rgba(255,255,255,0.02); }
 .illu-label{ display:flex; align-items:center; gap:0.5rem; padding:0.55em 1em; font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; font-weight:700; color:var(--cyan); background:rgba(79,216,255,0.08); border-bottom:1px solid var(--line); }
 .illu-svg-wrap{ padding:1rem; display:flex; justify-content:center; }
@@ -143,6 +144,9 @@ h1{
 .ans.wrong{ background:rgba(248,113,122,0.15); border-color:var(--red); }
 .ans.wrong .badge{ background:var(--red); }
 .ans.dim{ opacity:0.45; }
+.ans.selected{ background:rgba(79,216,255,0.14); border-color:var(--cyan); }
+.badge-square{ border-radius:6px; }
+.nextBtn:disabled{ opacity:0.4; cursor:not-allowed; }
 
 .feedback{ margin-top:1.3rem; padding:1rem 1.2rem; border-radius:10px; background:rgba(255,201,74,0.06); border-left:3px solid var(--gold); font-size:0.92rem; line-height:1.55; color:var(--text-dim); }
 .feedback strong{ color:var(--text); }

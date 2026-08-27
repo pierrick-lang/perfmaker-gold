@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { TOTAL_QUESTIONS } from "@/lib/questions";
 
 interface Answer {
   questionIndex: number;
-  selectedIndex: number | null;
+  selectedIndexes: number[];
   isCorrect: boolean;
   timedOut: boolean;
   timeTakenMs: number;
@@ -93,7 +94,7 @@ export default function AdminDashboard() {
               <th>Score</th>
               <th>Temps</th>
               <th>Statut</th>
-              <th>Réponses (Q1→Q10)</th>
+              <th>Réponses (Q1→Q{TOTAL_QUESTIONS})</th>
             </tr>
           </thead>
           <tbody>
@@ -105,12 +106,12 @@ export default function AdminDashboard() {
                 <td>{a.player.email}</td>
                 <td>{a.player.company || "—"}</td>
                 <td>{a.locale.toUpperCase()}</td>
-                <td>{a.score} / 10</td>
+                <td>{a.score} / {TOTAL_QUESTIONS}</td>
                 <td>{formatDuration(a.durationMs)}</td>
                 <td>{a.completed ? "Terminé" : "En cours"}</td>
                 <td>
                   <div className="answers-cell">
-                    {Array.from({ length: 10 }, (_, i) => {
+                    {Array.from({ length: TOTAL_QUESTIONS }, (_, i) => {
                       const ans = a.answers.find((x) => x.questionIndex === i);
                       const cls = ans ? (ans.isCorrect ? "dot ok" : "dot ko") : "dot";
                       const label = ans ? (ans.timedOut ? "⏱" : ans.isCorrect ? "✓" : "✗") : "·";

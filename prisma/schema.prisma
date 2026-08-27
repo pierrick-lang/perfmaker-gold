@@ -34,15 +34,15 @@ model Attempt {
 }
 
 model Answer {
-  id            String   @id @default(cuid())
-  attemptId     String
-  attempt       Attempt  @relation(fields: [attemptId], references: [id])
-  questionIndex Int
-  selectedIndex Int?
-  isCorrect     Boolean
-  timedOut      Boolean  @default(false)
-  timeTakenMs   Int
-  createdAt     DateTime @default(now())
+  id             String   @id @default(cuid())
+  attemptId      String
+  attempt        Attempt  @relation(fields: [attemptId], references: [id])
+  questionIndex  Int
+  selectedIndexes Int[]   @default([])
+  isCorrect      Boolean
+  timedOut       Boolean  @default(false)
+  timeTakenMs    Int
+  createdAt      DateTime @default(now())
 
   @@unique([attemptId, questionIndex])
 }

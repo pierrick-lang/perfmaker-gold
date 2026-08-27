@@ -11,6 +11,13 @@ interface AnswerResult {
   correct: boolean | null; // null = not answered yet
 }
 
+function sameSet(a: number[], b: number[]) {
+  if (a.length !== b.length) return false;
+  const sa = [...a].sort();
+  const sb = [...b].sort();
+  return sa.every((v, i) => v === sb[i]);
+}
+
 export default function Home() {
   const [screen, setScreen] = useState<Screen>("lang");
   const [locale, setLocale] = useState<Locale>("en");
@@ -28,7 +35,8 @@ export default function Home() {
     Array.from({ length: TOTAL_QUESTIONS }, () => ({ correct: null }))
   );
   const [locked, setLocked] = useState(false);
-  const [selected, setSelected] = useState<number | null>(null);
+  const [selected, setSelected] = useState<number[]>([]);
+  const [lastCorrect, setLastCorrect] = useState(false);
   const [timedOut, setTimedOut] = useState(false);
   const [timeLeft, setTimeLeft] = useState(TIME_LIMIT_SECONDS);
   const [finalDurationMs, setFinalDurationMs] = useState(0);
@@ -68,13 +76,13 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [screen, current]);
 
-  async function postAnswer(questionIndex: number, selectedIndex: number | null, timeTakenMs: number) {
+  async function postAnswer(questionIndex: number, selectedIndexes: number[] | null, timeTakenMs: number) {
     if (!attemptId) return;
     try {
       await fetch("/api/answer", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ attemptId, questionIndex, selectedIndex, timeTakenMs }),
+        body: JSON.stringify({ attemptId, questionIndex, selectedIndexes, timeTakenMs }),
       });
     } catch (e) {
       console.error(e);
@@ -85,7 +93,7 @@ export default function Home() {
     setLocked((wasLocked) => {
       if (wasLocked) return wasLocked;
       setTimedOut(true);
-      setSelected(null);
+      setLastCorrect(false);
       const timeTaken = Date.now() - questionStartRef.current;
       postAnswer(current, null, timeTaken);
       setResults((prev) => {
@@ -97,21 +105,33 @@ export default function Home() {
     });
   }
 
-  function selectAnswer(i: number) {
+  function submitAnswer(chosen: number[]) {
     if (locked) return;
     setLocked(true);
-    setSelected(i);
+    setSelected(chosen);
     stopTimer();
     const timeTaken = Date.now() - questionStartRef.current;
     const meta = QUESTIONS_META[current];
-    const isCorrect = i === meta.correct;
+    const isCorrect = sameSet(chosen, meta.correct);
+    setLastCorrect(isCorrect);
     if (isCorrect) setScore((s) => s + 1);
     setResults((prev) => {
       const next = [...prev];
       next[current] = { correct: isCorrect };
       return next;
     });
-    postAnswer(current, i, timeTaken);
+    postAnswer(current, chosen, timeTaken);
+  }
+
+  function toggleOption(i: number) {
+    if (locked) return;
+    const meta = QUESTIONS_META[current];
+    if (meta.correct.length <= 1) {
+      // single-answer question: clicking submits immediately
+      submitAnswer([i]);
+    } else {
+      setSelected((prev) => (prev.includes(i) ? prev.filter((x) => x !== i) : [...prev, i]));
+    }
   }
 
   async function handleNext() {
@@ -137,7 +157,7 @@ export default function Home() {
     }
     setCurrent(nextIndex);
     setLocked(false);
-    setSelected(null);
+    setSelected([]);
     setTimedOut(false);
   }
 
@@ -181,7 +201,7 @@ export default function Home() {
     setScore(0);
     setResults(Array.from({ length: TOTAL_QUESTIONS }, () => ({ correct: null })));
     setLocked(false);
-    setSelected(null);
+    setSelected([]);
     setTimedOut(false);
     setScreen("lang");
     setAttemptId(null);
@@ -200,6 +220,7 @@ export default function Home() {
 
   const q = questions[current];
   const meta = QUESTIONS_META[current];
+  const isMulti = meta.correct.length > 1;
 
   const centeredScreens: Screen[] = ["lang", "register"];
 
@@ -294,27 +315,35 @@ export default function Home() {
                 </div>
               )}
               <p className="qtext">{q.q}</p>
+              {isMulti && !locked && <p className="multi-hint">{ui.multiHint}</p>}
               <div className="answers">
                 {q.options.map((opt, i) => {
                   let cls = "ans";
                   if (locked) {
-                    if (i === meta.correct) cls += " correct";
-                    else if (i === selected) cls += " wrong";
+                    if (meta.correct.includes(i)) cls += " correct";
+                    else if (selected.includes(i)) cls += " wrong";
                     else cls += " dim";
+                  } else if (isMulti && selected.includes(i)) {
+                    cls += " selected";
                   }
                   return (
-                    <button key={i} className={cls} disabled={locked} onClick={() => selectAnswer(i)}>
-                      <span className="badge">{String.fromCharCode(65 + i)}</span>
+                    <button key={i} className={cls} disabled={locked} onClick={() => toggleOption(i)}>
+                      <span className={"badge" + (isMulti ? " badge-square" : "")}>
+                        {isMulti && !locked ? (selected.includes(i) ? "✓" : "") : String.fromCharCode(65 + i)}
+                      </span>
                       <span>{opt}</span>
                     </button>
                   );
                 })}
               </div>
+              {isMulti && !locked && (
+                <button className="nextBtn" onClick={() => submitAnswer(selected)} disabled={selected.length === 0}>
+                  {ui.validateBtn}
+                </button>
+              )}
               {locked && (
                 <div className="feedback">
-                  <strong>
-                    {timedOut ? ui.timeUpLabel + " " : selected === meta.correct ? ui.correctNote + " " : ui.noPointNote + " "}
-                  </strong>
+                  <strong>{timedOut ? ui.timeUpLabel + " " : lastCorrect ? ui.correctNote + " " : ui.noPointNote + " "}</strong>
                   {q.feedback}
                 </div>
               )}

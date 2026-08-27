@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { TOTAL_QUESTIONS } from "@/lib/questions";
 
 interface Row {
   firstName: string;
@@ -73,7 +74,7 @@ export default function Leaderboard() {
                     </td>
                     <td>{r.company || "—"}</td>
                     <td>
-                      {r.score} / 10
+                      {r.score} / {TOTAL_QUESTIONS}
                     </td>
                     <td>{formatDuration(r.durationMs)}</td>
                   </tr>
