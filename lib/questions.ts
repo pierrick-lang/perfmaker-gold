@@ -169,8 +169,8 @@ export const QUESTIONS_META: QuestionMeta[] = [
   { correct: [2], optionCount: 4, illustration: ILLU_LEAD_GEN, hasGain: false },
   { correct: [0], optionCount: 4, illustration: null, hasGain: false },
   { correct: [1], optionCount: 4, illustration: ILLU_COUNTDOWN, hasGain: false },
-  { correct: [2], optionCount: 4, illustration: null, hasGain: true },
   { correct: [2], optionCount: 4, illustration: ILLU_RETURN_SWAP, hasGain: false },
+  { correct: [2], optionCount: 4, illustration: null, hasGain: true },
   { correct: [0], optionCount: 4, illustration: null, hasGain: true },
 ];
 
