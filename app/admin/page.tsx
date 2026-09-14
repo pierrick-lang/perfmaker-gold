@@ -30,11 +30,17 @@ function formatDuration(ms: number | null) {
   return min > 0 ? `${min}m ${sec}s` : `${sec}s`;
 }
 
+const DELETE_PHRASE = "SUPPRIMER TOUTES LES DONNÉES";
+
 export default function AdminDashboard() {
   const [token, setToken] = useState("");
   const [unlocked, setUnlocked] = useState(false);
   const [attempts, setAttempts] = useState<Attempt[] | null>(null);
   const [error, setError] = useState("");
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [confirmText, setConfirmText] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
 
   async function load() {
     setError("");
@@ -49,6 +55,29 @@ export default function AdminDashboard() {
       setUnlocked(true);
     } catch (e) {
       setError("Erreur de chargement.");
+    }
+  }
+
+  async function handleDeleteAll() {
+    if (confirmText !== DELETE_PHRASE) return;
+    setDeleting(true);
+    setDeleteError("");
+    try {
+      const res = await fetch("/api/admin/players", {
+        method: "DELETE",
+        headers: { "x-admin-token": token },
+      });
+      if (!res.ok) {
+        setDeleteError("Échec de la suppression.");
+        return;
+      }
+      setAttempts([]);
+      setShowDeleteConfirm(false);
+      setConfirmText("");
+    } catch (e) {
+      setDeleteError("Erreur réseau lors de la suppression.");
+    } finally {
+      setDeleting(false);
     }
   }
 
@@ -83,6 +112,52 @@ export default function AdminDashboard() {
         <h1>Dashboard admin</h1>
         <p className="subtitle">{attempts?.length || 0} tentative(s) enregistrée(s)</p>
       </header>
+
+      <div className="danger-zone">
+        {!showDeleteConfirm ? (
+          <button
+            className="danger-btn"
+            onClick={() => setShowDeleteConfirm(true)}
+            disabled={!attempts || attempts.length === 0}
+          >
+            🗑️ Supprimer toutes les statistiques des joueurs
+          </button>
+        ) : (
+          <div className="danger-confirm">
+            <p>
+              Cette action est <strong>irréversible</strong> et supprimera définitivement tous les joueurs, tentatives et
+              réponses. Pour confirmer, recopie exactement la phrase suivante :
+            </p>
+            <p className="danger-phrase">{DELETE_PHRASE}</p>
+            <input
+              type="text"
+              value={confirmText}
+              onChange={(e) => setConfirmText(e.target.value)}
+              placeholder="Recopie la phrase ici"
+            />
+            <div className="danger-actions">
+              <button
+                className="danger-btn"
+                onClick={handleDeleteAll}
+                disabled={confirmText !== DELETE_PHRASE || deleting}
+              >
+                {deleting ? "Suppression…" : "Confirmer la suppression définitive"}
+              </button>
+              <button
+                className="ghost-btn"
+                onClick={() => {
+                  setShowDeleteConfirm(false);
+                  setConfirmText("");
+                  setDeleteError("");
+                }}
+              >
+                Annuler
+              </button>
+            </div>
+            {deleteError && <p className="field-error">{deleteError}</p>}
+          </div>
+        )}
+      </div>
       <div className="table-wrap">
         <table className="data-table">
           <thead>

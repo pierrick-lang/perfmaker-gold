@@ -22,3 +22,20 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "server_error" }, { status: 500 });
   }
 }
+
+export async function DELETE(req: Request) {
+  const token = req.headers.get("x-admin-token") || "";
+  if (!process.env.ADMIN_TOKEN || token !== process.env.ADMIN_TOKEN) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+
+  try {
+    await prisma.answer.deleteMany({});
+    await prisma.attempt.deleteMany({});
+    await prisma.player.deleteMany({});
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ error: "server_error" }, { status: 500 });
+  }
+}
