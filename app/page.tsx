@@ -297,7 +297,6 @@ export default function Home() {
             <div className="qpanel">
               <div className="qmeta">
                 <span className="qnum">{t(ui, "questionOf", { n: current + 1, total: TOTAL_QUESTIONS })}</span>
-                <span className="qgain">{q.gain ? "🎁 " + q.gain : ""}</span>
               </div>
               <div className="timerRow">
                 <div className="timerTrack">
@@ -366,7 +365,7 @@ export default function Home() {
                   return (
                     <div key={i} className={cls}>
                       <span className="rn">{i + 1}</span>
-                      <span className="rg">{item.gain || "—"}</span>
+                      <span className="rg">{i === TOTAL_QUESTIONS - 1 ? item.gain : ""}</span>
                     </div>
                   );
                 })}
